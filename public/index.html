@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boot Camp APIs</title>
+  <script src="//unpkg.com/alpinejs" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"
+    integrity="sha512-odNmoc1XJy5x1TMVMdC7EMs3IVdItLPlCeL5vSUPN2llYKMJ2eByTTAIiiuqLg+GdNr9hF6z81p27DArRFKT7A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    h1 {
+      border-radius: 1em;
+    }
+    body{
+      background-color: lightcoral;
+    }
+    .container{
+    border: 0.5em;
+
+    }
+
+    .widget1,
+.widget2 {
+    border-radius: 1em;
+    padding: 1em;
+    border: 3px solid black;
+}
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Bootcamp API Widgets</h1>
+    <div widget1>
+      <h2>Word Game</h2>
+      <div x-data="{
+          sentence : '',
+          longestWord : '',
+          shortestWord : '',
+          wordLengths : 0,
+          checkSentence() {
+           
+            axios
+            .get(`/api/word_game?sentence=${this.sentence}`)
+            .then((result) => {
+                 
+                this.longestWord = result.data.longestWord;
+                this.shortestWord = result.data.shortestWord;
+                this.wordLengths = result.data.wordLengths;     
+            });
+          }
+    
+      }">
+    
+        <div>
+          <textarea x-model="sentence" name="" id="" cols="30" rows="5"></textarea>
+    
+          <div>
+            <button x-on:click="checkSentence">Check Sentence</button>
+          </div>
+    
+        </div>
+    
+        <div>
+          <b>
+            <div>
+              Longest Word: <span x-text="longestWord"></span>
+            </div>
+      
+            <div>
+              Shortest Word: <span x-text="shortestWord"></span>
+            </div>
+      
+            <div>
+              Word Length: <span x-text="wordLengths"></span>
+            </div>
+    
+          </b>
+          
+        </div>
+    
+      </div>
+    </div>
+    
+    <div widget2>
+      <h2>Total Phone Bill</h2>
+      <div class="widget" x-data="{
+        useCost:'',
+        billMessage:'',
+        phoneBill(){
+            axios
+            .get(`/api/phonebill/total?useCost=${this.useCost}`)
+            .then((result)=>{
+                this.billMessage=result.data.bill;
+                
+            });
+        }
+           
+        }">
+        
+        <div x-show="billMessage.length > 0" class="message" x-text="billMessage">
+           
+        </div>
+        <div class="input">
+            <label for="useCost"><b>Enter Phone Usage:</b> </label>
+            <input type="text" placeholder="call,sms,sms" x-model="useCost" id="useCost">
+        </div>
+        <div class="cont"><button x-on:click="phoneBill">calculate bill</button></div>
+    </div>
+      
+
+  </div>
+  
+
+ 
+
+</body>
+
+</html>
